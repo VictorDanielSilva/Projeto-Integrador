@@ -1,0 +1,246 @@
+<html>
+    <head>
+    <title>ViaCEP Webservice</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="_css/estilo.css">
+    <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+    <script src = "http://jqueryvalidation.org/files/dist/jquery.validate.js"></script>
+    <script src="_javascript/JSON.js"></script>
+
+    <script>
+    
+        function limpa_formulário_cep() {
+                
+                document.getElementById('rua').value=("");
+                document.getElementById('bairro').value=("");
+                document.getElementById('cidade').value=("");
+                document.getElementById('uf').value=("");
+                document.getElementById('ibge').value=("");
+        }
+    
+        function meu_callback(conteudo) {
+            if (!("erro" in conteudo)) {
+                
+                document.getElementById('rua').value=(conteudo.logradouro);
+                document.getElementById('bairro').value=(conteudo.bairro);
+                document.getElementById('cidade').value=(conteudo.localidade);
+                document.getElementById('uf').value=(conteudo.uf);
+                document.getElementById('ibge').value=(conteudo.ibge);
+            } //end if.
+            else {
+                
+                limpa_formulário_cep();
+                alert("CEP não encontrado.");
+            }
+        }
+            
+        function pesquisacep(valor) {
+    
+            
+            var cep = valor.replace(/\D/g, '');
+    
+            
+            if (cep != "") {
+    
+               
+                var validacep = /^[0-9]{8}$/;
+    
+                
+                if(validacep.test(cep)) {
+    
+                   
+                    document.getElementById('rua').value="...";
+                    document.getElementById('bairro').value="...";
+                    document.getElementById('cidade').value="...";
+                    document.getElementById('uf').value="...";
+                    document.getElementById('ibge').value="...";
+    
+                   
+                    var script = document.createElement('script');
+    
+                   
+                    script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+    
+                    
+                    document.body.appendChild(script);
+    
+                } 
+                else {
+                    
+                    limpa_formulário_cep();
+                    alert("Formato de CEP inválido.");
+                }
+            } 
+            else {
+                
+                limpa_formulário_cep();
+            }
+        };
+    
+
+    </script>
+    </head>
+
+    <header>
+        <div class="logo-imagem">
+          <center>
+          <img src="_imagem/Logo(1).png" width="90" height="75" class="abrir_modal img_modal" onclick="abrirModal()">
+          </center> 
+        </div>
+        <div class="botao">
+          <ul>
+            <center>
+             <li><a href="Index.html">Home</a></li>
+             <li><a href="Disciplinas.html">Disciplinas</a></li>
+             <li><a href="#">Chat de Dúvidas</a></li>
+             <li><a href="Quem Somos.html">Quem Somos</a></li>
+             <li><a href="contato.html">Contato</a></li>
+            </center>
+          </ul>
+        </div>
+        <div class="login">
+          <h3><a href="#">Login</a></h3>
+        </div>
+      </header>
+
+    <body>
+    
+      <form method="get" name="form" id="form">
+        <div class="bgf">
+            <br>
+             <div class="ftext">
+                 <h2>Formulário de Cadastro</h2>
+             </div>
+             <br><br><br>
+             <div class="inf"><h3>Informações Pessoais</h3></div>
+             <br>
+             Nome:
+             <input type="text" id="nome" maxlength="80" size="30"><br>
+             <br>
+             CPF:
+             <input type="text" id="cpf" class="cpf" maxlength="14" size="30">
+             <br><br>
+             Telefone:
+             <input type="text" name="Telefone" id="tel"  autocomplete="off" class="tel">
+             <br><br>
+             Celular:
+             <input type="text" name="cel" id="cel"  autocomplete="off" class="cel">
+             <br><br><br>
+             <h4>Endereço:</h4>
+             <br>
+        <label>Cep:
+        <input name="cep" type="text" id="cep" value="" size="12" maxlength="9"
+               onblur="pesquisacep(this.value);" /></label><br />
+               <br>       
+        <label>Rua:
+        <input name="rua" type="text" id="rua" size="60" /></label><br />
+        <br>
+        <label>Número:
+        <input name="numero" type="text" id="num" size="5" /></label><br />
+        <br>
+        <label>Complemento:
+        <input name="complemento" type="text" id="comp" size="20" /></label><br />
+        <br>
+        <label>Bairro:
+        <input name="bairro" type="text" id="bairro" size="40" /></label><br />
+        <br>
+        <label>Cidade:
+        <input name="cidade" type="text" id="cidade" size="40" /></label><br />
+        <br>
+        <label>Estado:
+        <input name="uf" type="text" id="uf" size="3" /></label><br />
+        <br>
+        <label>IBGE:
+        <input name="ibge" type="text" id="ibge" size="8" /></label><br />
+    
+            <button class="bbtao" onclick="Verificar()" >Cadastrar-se</button>
+       
+      </form>
+
+    <script>
+     
+     function verificarNome(){
+         let nome= document.getElementById("nome").value;
+         if ((nome.length >= 10) && (nome!=""))
+            return true;
+         else
+           {
+               alert("Nome inválido");
+               return false;
+           }
+     }
+
+
+        function Verificar()
+{
+       if(validarCampos()==true && verificarNome()==true)
+            {  
+                criarJson();
+                alert("Dados Corretos");
+                
+            }  
+       else
+                alert("Preencha os dados");
+    
+}
+
+        function validarCampos()
+{
+       if( document.getElementById("nome"). value=="") return false;
+       if( document.getElementById("cpf"). value=="") return false;
+       if( document.getElementById("cep"). value=="") return false;
+       if( document.getElementById("num"). value=="") return false;
+       if( document.getElementById("comp"). value=="") return false;
+         
+        return true;
+}
+
+
+$('#cpf').mask('999.999.999-99'); 
+
+$("#cel").mask("(99)9999-9999?9");
+
+$('#tel').mask('(99)9999-9999?9');
+
+$('#cep').mask('99999999');
+
+
+function criarJson()
+{
+    var obj = {
+        nome:"",
+        cpf:"",
+        num:"",
+        comp:"",
+        cep:[]   
+}
+
+obj.nome = document.getElementById("nome").value;
+obj.cpf = document.getElementById("cpf").value;
+obj.num = document.getElementById("num").value;
+obj.comp = document.getElementById("comp").value;
+
+obj.cep.push(document.getElementById("cep").value);
+obj.cep.push(document.getElementById("rua").value);
+obj.cep.push(document.getElementById("bairro").value);
+obj.cep.push(document.getElementById("cidade").value);
+obj.cep.push(document.getElementById("uf").value);
+obj.cep.push(document.getElementById("ibge").value);
+
+var json= JSON.stringify(obj);
+document.write("<h1>Dados</h1>");
+document.write(json);
+
+
+}
+
+
+
+</script>
+
+</body>
+
+</html>
